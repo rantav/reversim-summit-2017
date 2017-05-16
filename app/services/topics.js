@@ -2,7 +2,7 @@ import { apiEndpoint } from '../../config/app';
 import createRestApiClient from '../utils/createRestApiClient';
 
 export default () => {
-  const client = createRestApiClient().withConfig({ baseURL: apiEndpoint });
+  const client = createRestApiClient({ baseURL: apiEndpoint });
   return {
     getTopics: () => client.request({
       method: 'GET',

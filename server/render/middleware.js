@@ -4,9 +4,10 @@ import configureStore from '../../app/store/configureStore';
 import * as types from '../../app/types';
 import pageRenderer from './pageRenderer';
 import fetchDataForRoute from '../../app/utils/fetchDataForRoute';
+import { setFeatureOverrides, parseFeatureOverridesFromQuery } from '../../app/features';
 
 /*
- * Export render function to be used in server/config/routes.js
+ * Export render function to be used in server/index.js
  * We grab the state passed in from the server and the req object from Express/Koa
  * and pass it into the Router.run function.
  */
@@ -18,7 +19,20 @@ export default function render(req, res) {
       authenticated,
       isWaiting: false,
       message: '',
-      isLogin: true
+      isLogin: true,
+      google: req.user && req.user.google,
+      name: req.user && req.user.profile.name,
+      oneLiner: req.user && req.user.profile.oneLiner,
+      email: req.user && req.user.email,
+      isReversimTeamMember: req.user && req.user.isReversimTeamMember,
+      picture: req.user && req.user.profile.picture,
+      bio: req.user && req.user.profile.bio,
+      trackRecord: req.user && req.user.profile.trackRecord,
+      linkedin: req.user && req.user.profile.linkedin,
+      twitter: req.user && req.user.profile.twitter,
+      stackOverflow: req.user && req.user.profile.stackOverflow,
+      id: req.user && req.user._id,
+      proposals: req.user && req.user.proposals
     }
   }, history);
   const routes = createRoutes(store);
@@ -50,6 +64,9 @@ export default function render(req, res) {
     } else if (redirect) {
       res.redirect(302, redirect.pathname + redirect.search);
     } else if (props) {
+      const featureOverrides = parseFeatureOverridesFromQuery(props.location.query);
+      setFeatureOverrides(featureOverrides);
+
       // This method waits for all render component
       // promises to resolve before returning to browser
       store.dispatch({ type: types.CREATE_REQUEST });
@@ -59,9 +76,9 @@ export default function render(req, res) {
           const html = pageRenderer(store, props);
           res.status(200).send(html);
         })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).json(err);
+        .catch((fetchErr) => {
+          console.error(fetchErr);
+          res.status(500).json(fetchErr);
         });
     } else {
       res.sendStatus(404);

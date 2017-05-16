@@ -9,13 +9,19 @@ import { App, Vote, Dashboard, About, LoginOrRegister } from './pages';
  * state from the store after it has been authenticated.
  */
 export default (store) => {
+  const isClientSide = typeof window !== 'undefined' && window.document && window.document.createElement;
+
   const requireAuth = (nextState, replace, callback) => {
     const { user: { authenticated }} = store.getState();
     if (!authenticated) {
-      replace({
-        pathname: '/login',
-        state: { nextPathname: nextState.location.pathname }
-      });
+      if (isClientSide) {
+        window.location.href = `/auth/google?returnTo=/${nextState.location.pathname}`;
+      } else {
+        replace({
+          pathname: '/auth/google?returnTo=' + nextState.location.pathname,
+          state: {nextPathname: nextState.location.pathname}
+        });
+      }
     }
     callback();
   };

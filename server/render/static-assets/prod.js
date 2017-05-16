@@ -18,5 +18,7 @@ const createStylesheets = () => `
 <link rel="stylesheet" href="/assets/${assets['app.css']}" />
 `;
 
-export { createAppScript, createTrackingScript, createStylesheets };
+const createGoogleMap = () => '<script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places"></script>';
+
+export { createAppScript, createTrackingScript, createStylesheets, createGoogleMap };
 

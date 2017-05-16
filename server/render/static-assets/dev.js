@@ -14,5 +14,7 @@ ga('send', 'pageview');
 
 const createStylesheets = () => '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed" />';
 
-export { createAppScript, createTrackingScript, createStylesheets };
+const createGoogleMap = () => '<script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places"></script>';
+
+export { createAppScript, createTrackingScript, createStylesheets, createGoogleMap };
 

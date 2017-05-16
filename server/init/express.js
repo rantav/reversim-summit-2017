@@ -7,7 +7,6 @@ import flash from 'express-flash';
 import methodOverride from 'method-override';
 import gzip from 'compression';
 import helmet from 'helmet';
-import unsupportedMessage from '../db/unsupportedMessage';
 import { sessionSecret } from '../../config/secrets';
 import { DB_TYPE, ENV } from '../../config/env';
 import { session as dbSession } from '../db';
@@ -21,8 +20,8 @@ export default (app) => {
     app.use(helmet());
   }
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.urlencoded({limit: '50mb', extended: true })); // for parsing application/x-www-form-urlencoded
   app.use(methodOverride());
 
   app.use(express.static(path.join(process.cwd(), 'public')));
@@ -54,12 +53,7 @@ export default (app) => {
   //          cookie: Please note that secure: true is a recommended option.
   //                  However, it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies.
   //                  If secure is set, and you access your site over HTTP, the cookie will not be set.
-  let sessionStore = null;
-  if (!dbSession) {
-    console.warn(unsupportedMessage('session'));
-  } else {
-    sessionStore = dbSession();
-  }
+  const sessionStore = dbSession();
 
   const sess = {
     resave: false,

@@ -13,9 +13,7 @@ class RestApiClient {
   }
 }
 
-const createRestApiClient = () => ({
-  withConfig: config => new RestApiClient(config)
-});
+const createRestApiClient = config => new RestApiClient(config);
 
 export default createRestApiClient;
 

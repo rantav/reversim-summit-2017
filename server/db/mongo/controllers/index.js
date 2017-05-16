@@ -1,9 +1,11 @@
-import topics from './topics';
+import tags from './tags';
 import users from './users';
+import proposals from './proposals';
 
-export { topics, users };
+export { tags, users, proposals }; // TODO needed?
 
 export default {
-  topics,
+  proposals,
+  tags,
   users
 };

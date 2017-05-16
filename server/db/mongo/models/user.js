@@ -4,7 +4,7 @@
  */
 
 import bcrypt from 'bcrypt-nodejs';
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 // Other oauthtypes to be added
 
@@ -12,17 +12,29 @@ import mongoose from 'mongoose';
  User Schema
  */
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
   tokens: Array,
+  isReversimTeamMember: { type: Boolean, default: false },
   profile: {
     name: { type: String, default: '' },
+    oneLiner: { type: String, default: '' },
+    bio: { type: String, default: '' },
     gender: { type: String, default: '' },
     location: { type: String, default: '' },
     website: { type: String, default: '' },
-    picture: { type: String, default: '' }
+    picture: { type: String, default: '' },
+    trackRecord: { type: String, default: '' },
+    linkedin: { type: String, default: '' },
+    twitter: { type: String, default: '' },
+    stackOverflow: { type: String, default: '' }
   },
+  proposals: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Proposal'
+  }],
+  created_at: Date,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   google: {}

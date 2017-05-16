@@ -11,7 +11,7 @@ const createApp = (store, props) => renderToString(
   </Provider>
 );
 
-const buildPage = ({ componentHTML, initialState, headAssets }) => {
+const buildPage = ({ componentHTML, initialState, headAssets, featureOverrides }) => {
   return `
 <!doctype html>
 <html>
@@ -24,16 +24,24 @@ const buildPage = ({ componentHTML, initialState, headAssets }) => {
   </head>
   <body>
     <div id="app">${componentHTML}</div>
-    <script>window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}</script>
+    <script>
+    window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}
+    window.__FT_OVERRIDES__ = ${JSON.stringify(featureOverrides)};
+    </script>
+    ${staticAssets.createGoogleMap()}
     ${staticAssets.createAppScript()}
   </body>
 </html>`;
 };
 
-export default (store, props) => {
-  const initialState = store.getState();
+function escapeTags(state) {
+  return JSON.parse(JSON.stringify(state).replace(/<\//g, ''));
+}
+
+export default (store, props, featureOverrides) => {
+  const initialState = escapeTags(store.getState());
   const componentHTML = createApp(store, props);
   const headAssets = Helmet.renderStatic();
-  return buildPage({ componentHTML, initialState, headAssets });
+  return buildPage({ componentHTML, initialState, headAssets, featureOverrides });
 };
 
