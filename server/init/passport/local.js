@@ -4,7 +4,7 @@
  */
 
 import { Strategy as LocalStrategy } from 'passport-local';
-import { passport as dbPassport } from '../../db';
+import dbPassport from '../../db/passport';
 
 export default (passport) => {
   /*

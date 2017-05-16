@@ -1,6 +1,6 @@
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { google } from '../../../config/secrets';
-import { passport as dbPassport } from '../../db';
+import dbPassport from '../../db/passport';
 
 export default (passport) => {
   /*

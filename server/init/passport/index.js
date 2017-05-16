@@ -2,7 +2,7 @@
 import passport from 'passport';
 import local from './local';
 import google from './google';
-import { passport as dbPassport } from '../../db';
+import dbPassport from '../../db/passport';
 
 export default () => {
   // Configure Passport authenticated session persistence.

@@ -2,7 +2,7 @@
  * Routes for express app
  */
 import passport from 'passport';
-import { controllers, passport as passportConfig } from '../db';
+import controllers from '../db/controllers';
 
 const {
   tags: tagsController,

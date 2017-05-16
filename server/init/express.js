@@ -9,7 +9,7 @@ import gzip from 'compression';
 import helmet from 'helmet';
 import { sessionSecret } from '../../config/secrets';
 import { DB_TYPE, ENV } from '../../config/env';
-import { session as dbSession } from '../db';
+import dbSession from '../db/session';
 
 export default (app) => {
   app.set('port', (process.env.PORT || 3000));
