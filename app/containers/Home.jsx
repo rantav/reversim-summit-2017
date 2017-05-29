@@ -1,100 +1,62 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames/bind';
-import styles from '../css/components/home.css';
-import mstyles from '../css/main.css';
-import fa from 'font-awesome/css/font-awesome.css';
+import { Element } from 'react-scroll';
+import feature from '../features';
+import Hero from '../components/Hero';
+import Messages from '../components/sections/Messages';
+import About from '../components/sections/About';
+import ScheduleSection from '../components/sections/ScheduleSection';
+import Speakers from '../components/sections/Speakers';
+import Timeline from '../components/sections/Timeline';
+import Register from '../components/sections/Register';
+import Proposals from '../components/sections/Proposals';
+import CFP from '../components/sections/CFP';
+import Team from '../components/sections/Team';
+import Location from '../components/sections/Location';
+import Networking from '../components/sections/Networking';
+import Footer from '../components/Footer';
 
+class Home extends React.Component {
+  render() {
+    const { speakers, proposals, user: { team, isReversimTeamMember }, reversimTweets, location, acceptedProposals } = this.props;
 
-import hero from '../images/hero.jpg';
+    const sections = [
+      { name: "messages", el: Messages },
+      { name: "about", el: About },
+      { name: "schedule", el: ScheduleSection, feature: 'publishAgenda' },
+      { name: "speakers", el: Speakers, props: { speakers }, feature: 'publishAgenda' },
+      { name: "timeline", el: Timeline, feature: 'publishAgenda', isNot: true },
+      { name: "register", el: Register },
+      { name: "proposals", el: Proposals, props: { proposals, isReversimTeamMember }, feature: 'publishAgenda', isNot: true },
+      { name: "cfp", el: CFP, feature: "submission" },
+      { name: "team", el: Team, props: { team } },
+      { name: "sponsors", el: Location },
+      { name: "networking", el: Networking, feature: "networking" }
+    ];
 
-const cx = classnames.bind(styles);
-const mcx = classnames.bind(mstyles);
-const fax = classnames.bind(fa);
+    const elements = sections
+      .filter(section => {
+        if (!section.feature) return true;
+        return section.isNot ? !feature(section.feature, false) : feature(section.feature, false);
+      })
+      .map(section => {
+        return (<Element name={section.name} ref={section.name} key={section.name}>
+          {React.createElement(section.el, { name: section.name })}
+        </Element>)
+      });
 
-const Home = (props) => {
-  return (
-    <div className={cx("home")}>
-      <section className={cx("hero")}>
-        <div className={classnames(cx("hero-shade"), mcx("stretch"))}/>
-        <div className={cx("hero-text")}>
-          <div className={cx("hero-subtitle")}>
-            <i className={fax("fa","fa-calendar-o")}></i>15-16.OCT&nbsp;&nbsp;
-            <i className={fax("fa","fa-map-marker")}></i>COLLEGE OF MANAGEMENT
-          </div>
-          <h1>Reversim<br/>Summit 2017</h1>
-          <h2>Coming Soon</h2>
-        </div>
-      </section>
-      <section>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-        <p>bla bla bla</p>
-      </section>
-    </div>
-  );
+    return (
+      <div className="home">
+        <Hero/>
+        {elements}
+        <Footer tweets={reversimTweets} />
+      </div>
+    );
+  }
 };
 
 function stateToProps(state) {
-  return { name: state.name };
+  return state;
 }
 
 

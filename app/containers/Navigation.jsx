@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { Link as ScrollLink } from 'react-scroll';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { logOut } from '../actions/users';
