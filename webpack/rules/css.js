@@ -63,7 +63,7 @@ module.exports = ({ production = false, browser = false } = {}) => {
   return {
     test: /\.css$/,
     use: browser ? browserLoaders : serverLoaders,
-    include: PATHS.app
+    include: [PATHS.app, PATHS.modules]
   };
 };
 

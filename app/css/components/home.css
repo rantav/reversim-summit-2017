@@ -1,0 +1,47 @@
+.hero {
+    position: relative;
+    background-image: url('../../images/hero.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.hero-shade {
+    background: rgba(0,30,60,0.7);
+}
+
+.hero-text {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align:center;
+    text-transform: uppercase;
+    padding: 150px 0;
+    position: relative;
+}
+
+.hero-text h1 {
+    font-family: 'Open Sans', serif;
+    letter-spacing: 1px;
+    font-size: 8rem;
+    margin: 1rem 0;
+    line-height: 1;
+}
+
+.hero-text h2 {
+    padding: 2rem 5rem;
+    border: 5px solid #fff;
+    position: relative;
+    top: 3rem;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+}
+
+.hero-subtitle i {
+    color: #1ac6ff;
+}

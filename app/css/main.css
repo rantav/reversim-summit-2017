@@ -1,32 +1,52 @@
-@import 'settings';
-@import 'common/layout';
-@import 'common/typography';
-
-@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import url(https://fonts.googleapis.com/css?family=Merriweather);
+@import url(https://fonts.googleapis.com/css?family=Merriweather+Sans);
+@import url(https://fonts.googleapis.com/css?family=PT+Sans);
+@import url(https://fonts.googleapis.com/css?family=Prompt);
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+@import url(https://fonts.googleapis.com/css?family=Muli);
 
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: var(--fontMontserrat);
+  font-family: 'Open Sans', sans-serif;
 }
 
-.app {
-  @apply --box;
-  height: 100%;
-  font-weight: normal;
-  font-smoothing: antialiased;
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+.stretch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.retina-show {
+  display: none;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .retina-hide {
+    display: none;
+  }
+  .retina-show {
+    display: block;
+    display: initial;
+  }
 }
 
 
-/* Add your global styles below... */
-
-/* ex:
-
-:global {
-  & .red { color: red; }
-  & .blue { color: blue; }
+.app-bar {
+  position: fixed;
 }
-
-*/
