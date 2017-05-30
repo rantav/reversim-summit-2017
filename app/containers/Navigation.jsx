@@ -36,7 +36,7 @@ class Navigation extends React.Component {
       { to: "location", text: "Location" }
     ];
 
-    items = items.map((item, i) => <li key={i}><Link to={item.to} className={cx("nav-link")} activeClassName={cx("active")}>{item.text}</Link></li>);
+    items = items.map((item, i) => <li key={i}><ScrollLink spy={true} duration={500} smooth={true} offset={-80} to={item.to} className={cx("nav-link")} activeClass={cx("active")}>{item.text}</ScrollLink></li>);
 
     return (
       <nav className={cx('navigation', { fixed: this.state.fixed })} role="navigation">
