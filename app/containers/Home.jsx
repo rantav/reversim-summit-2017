@@ -13,6 +13,7 @@ import Proposals from '../components/sections/Proposals';
 import CFP from '../components/sections/CFP';
 import Team from '../components/sections/Team';
 import Location from '../components/sections/Location';
+import Sponsors from '../components/sections/Sponsors';
 import Networking from '../components/sections/Networking';
 import Footer from '../components/Footer';
 
@@ -30,7 +31,8 @@ class Home extends React.Component {
       { name: "proposals", el: Proposals, props: { proposals, isReversimTeamMember }, feature: 'publishAgenda', isNot: true },
       { name: "cfp", el: CFP, feature: "submission" },
       { name: "team", el: Team, props: { team } },
-      { name: "sponsors", el: Location },
+      { name: "sponsors", el: Sponsors },
+      { name: "location", el: Location },
       { name: "networking", el: Networking, feature: "networking" }
     ];
 
