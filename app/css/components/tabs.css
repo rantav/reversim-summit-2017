@@ -1,0 +1,34 @@
+.tabs {
+
+}
+
+.tab-headers {
+    display: flex;
+    letter-spacing: 0.15em;
+}
+
+.tab-headers li:not(:last-child) {
+    margin-right: 3rem;
+}
+
+.tab-header {
+    color: #333;
+    margin: 1rem 0;
+    padding: 0.8rem 0;
+    border-bottom: 4px solid transparent;
+    font-weight: 700;
+    font-size: 1.1rem
+}
+
+.tab-header.active {
+    color: #1ac6ff;
+    border-bottom-color: #1ac6ff;
+}
+
+.tab-header a {
+    color: inherit;
+}
+
+.tab-content:not(.active) {
+    display:none;
+}

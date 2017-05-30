@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Navigation from '../containers/Navigation';
-import Message from '../containers/Message';
-import styles from '../css/main.css';
-import { Element, Link as ScrollLink } from 'react-scroll';
+import Navigation from './Navigation';
+import Message from './Message';
+import styles from 'css/main.css';
 
 const cx = classNames.bind(styles);
 

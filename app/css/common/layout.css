@@ -1,10 +1,7 @@
-:root {
+.panel {
+  display: flex;
+}
 
-  --box {
-    padding: 8px 24px;
-  }
-
-  --flexNotMoreThan200 {
-    flex: 0 1 200px;
-  }
+.panel.vertical {
+  display: block;
 }

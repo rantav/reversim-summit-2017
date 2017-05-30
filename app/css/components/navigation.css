@@ -42,10 +42,20 @@
   font-weight: 300;
   font-size: 0.875rem;
   margin-right: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-bottom: 3px solid transparent;
+  padding-bottom: 0.5rem;
 }
 
 .nav-link:visited {
   color: #fff;
+}
+
+.navigation.fixed .nav-link.active {
+  color: #1ac6ff;
+  font-weight: 700;
+  border-color: #1ac6ff;
 }
 
 .item {

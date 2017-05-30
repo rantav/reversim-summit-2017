@@ -11,7 +11,7 @@ const mcx = classnames.bind(mstyles);
 const fax = classnames.bind(fa);
 
 export default (props) => {
-  return (<section className={cx("hero")}>
+  return (<section className={classnames(cx("hero"), mcx("full-width"))}>
     <div className={classnames(cx("hero-shade"), mcx("stretch"))}/>
     <div className={cx("hero-text")}>
       <div className={cx("hero-subtitle")}>

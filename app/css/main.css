@@ -1,17 +1,20 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
-@import url(https://fonts.googleapis.com/css?family=Merriweather);
-@import url(https://fonts.googleapis.com/css?family=Merriweather+Sans);
-@import url(https://fonts.googleapis.com/css?family=PT+Sans);
-@import url(https://fonts.googleapis.com/css?family=Prompt);
-@import url(https://fonts.googleapis.com/css?family=Raleway);
-@import url(https://fonts.googleapis.com/css?family=Muli);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:700);
+@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700);
 
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
 
-* { box-sizing: border-box; }
+html {
+  font-size: 15px;
+  line-height: 1.6;
+}
 
 body {
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'PT Sans', sans-serif;
+  color: #51545b;
 }
 
 img {
@@ -22,6 +25,46 @@ img {
 ul {
   padding: 0;
   list-style: none;
+}
+
+ul.with-bullets {
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+a {
+  text-decoration: none;
+  color: #1ac6ff;
+}
+
+p {
+  line-height: 2;
+}
+
+h3 {
+  font-size: 3rem;
+  color: #262627;
+  margin: 0.5em 0;
+  font-weight: 400;
+}
+
+h5 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: #262627;
+  margin: 1em 0;
+}
+
+h6 {
+  font-size: 1rem;
+  line-height: 1.2;
+  margin: 1em 0;
+  color: #262627;
+}
+
+section:not(.full-width) {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .stretch {
