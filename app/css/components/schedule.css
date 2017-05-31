@@ -1,0 +1,55 @@
+.days {
+    border: 1px solid #ebebeb;
+}
+
+.day {
+    color: #1ac6ff;
+    position: relative;
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.day.active {
+    background: #1ac6ff;
+    color: white;
+    cursor: default;
+    pointer-events: none;
+}
+
+.day:after {
+    transition: opacity 0.15s ease;
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    content: "";
+    border-style: solid;
+    border-width: 7px 10px 0 10px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    opacity: 0;
+    z-index: 1;
+    border-top-color: #1ac6ff;
+}
+
+.day.active:after {
+    opacity: 1;
+}
+
+.day button {
+    width: 100%;
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    outline: none;
+    cursor: inherit;
+}
+
+.day h4, .day h6 {
+    color: inherit;
+}

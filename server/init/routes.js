@@ -50,4 +50,6 @@ export default (app) => {
   app.get('/tag', tagsController.all);
   app.post('/tag/:id', tagsController.add);
   app.delete('/tag/:id', tagsController.remove);
+
+  app.get('/proposal', proposalsController.all);
 };

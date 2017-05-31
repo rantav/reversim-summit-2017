@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Element } from 'react-scroll';
-import feature from '../features';
+import features from '../features';
 import Hero from '../components/Hero';
 import Messages from '../components/sections/Messages';
 import About from '../components/sections/About';
@@ -24,7 +24,7 @@ class Home extends React.Component {
     const sections = [
       { name: "messages", el: Messages },
       { name: "about", el: About },
-      { name: "schedule", el: ScheduleSection, feature: 'publishAgenda' },
+      { name: "schedule", el: ScheduleSection, feature: 'publishAgenda', props: { acceptedProposals } },
       { name: "speakers", el: Speakers, props: { speakers }, feature: 'publishAgenda' },
       { name: "timeline", el: Timeline, feature: 'publishAgenda', isNot: true },
       { name: "register", el: Register },
@@ -32,18 +32,18 @@ class Home extends React.Component {
       { name: "cfp", el: CFP, feature: "submission" },
       { name: "team", el: Team, props: { team } },
       { name: "sponsors", el: Sponsors },
-      { name: "location", el: Location },
+      { name: "location", el: Location, props: { location } },
       { name: "networking", el: Networking, feature: "networking" }
     ];
 
     const elements = sections
       .filter(section => {
         if (!section.feature) return true;
-        return section.isNot ? !feature(section.feature, false) : feature(section.feature, false);
+        return section.isNot ? !features(section.feature, false) : features(section.feature, false);
       })
       .map(section => {
         return (<Element name={section.name} ref={section.name} key={section.name}>
-          {React.createElement(section.el, { name: section.name })}
+          {React.createElement(section.el, { name: section.name, ...section.props })}
         </Element>)
       });
 
@@ -58,7 +58,13 @@ class Home extends React.Component {
 };
 
 function stateToProps(state) {
-  return state;
+  return {
+    user: state.user,
+    proposals: !features('submission', false) ? _.chain(state.proposal.proposals).shuffle().take(4).value() : state.proposal.proposals,
+    acceptedProposals: features('publishAgenda', false) ? state.proposal.accepted : [],
+    reversimTweets: state.tweets.reversim,
+    speakers: state.proposal.speakers
+  };
 }
 
 
