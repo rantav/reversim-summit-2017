@@ -6,10 +6,10 @@ import aboutImg from '../images/about.png';
 const About = () => (
   <Section title="About">
     <Row>
-      <Col className="mr-5">
+      <Col className="pr-5 mb-5 ml-lg-auto" xs="12" lg="6">
         <img className="d-block ml-auto img-fluid" src={aboutImg} alt="Reversim Summit 2017"/>
       </Col>
-      <Col>
+      <Col className="text-center text-lg-left" xs="12" sm="12" lg="6">
         <h4 className="mb-4">General Info</h4>
         <h5>About Reversim Summit</h5>
         <p>
