@@ -11,7 +11,8 @@ class Hero extends Component {
     return (
       <section className={cn(s.hero, "d-flex", "align-items-center", "justify-content-center", "font-pt")}>
         <div>
-          <h1 className={cn("font-weight-bold", "mb-4", "text-center", s.title)}>Reversim Summit 2017</h1>
+          <h1 className={cn("font-weight-bold", "w-75", "mx-auto", 
+            "mb-4", "mt-sm-auto", "mt-5", "text-center", s.title)}>Reversim Summit 2017</h1>
           <div className={cn(s.autoCenter, "h4", "d-inline-block", "mb-4")}>
             <div><i className="fa fa-calendar-o text-primary mr-3 mb-3"/><span>15 - 16 . Oct</span></div>
             <div><i className="fa fa-map-marker text-primary mr-3 ml-1"/><span>College of Management</span></div>
