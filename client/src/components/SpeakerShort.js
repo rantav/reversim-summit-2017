@@ -1,19 +1,23 @@
 import React from 'react';
-import {Col, Row} from "reactstrap";
+import { Button, Col, Row } from 'reactstrap';
 import cn from 'classnames';
 import s from './SpeakerPage.css';
 import SpeakerSocialLinks from "./SpeakerSocialLinks";
 import {Link} from "react-router-dom";
+import { getHref } from '../utils';
 
-const SpeakerShort = (speaker) => {
-  const { name, picture, oneLiner, href } = speaker;
+const SpeakerShort = ({ speaker, editable, hasLink }) => {
+  const { name, picture, oneLiner } = speaker;
+
+  const nameEl = <h3>{name}{editable && <Button color="primary" size="sm" className="ml-3"><Link to={`/speaker/${speaker._id}/edit`}><i className="fa fa-pencil"/></Link></Button>}</h3>;
 
   return <Row className={cn("align-items-center my-4", s.speakerShort)}>
     <Col sm="auto">
       <div className={s.speakerImg} style={{backgroundImage: `url('${picture}')`}}/>
     </Col>
     <Col>
-      <Link to={`/speaker/${href}`}><h3>{name}</h3></Link>
+      { hasLink ? <Link to={`/speaker/${getHref(speaker)}`}>{nameEl}</Link> :
+        <span>{nameEl}</span> }
       <div className="text-muted mb-2">{oneLiner}</div>
       <SpeakerSocialLinks {...speaker} className={cn(s.socialLinks, 'ml-0')}/>
     </Col>

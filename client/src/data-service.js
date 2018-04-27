@@ -1,4 +1,4 @@
-import { get, post, delete2 } from './api';
+import { get, post, put, delete2 } from './api';
 
 export async function getProposals() {
   return await get("/api/proposal");
@@ -20,6 +20,14 @@ export async function logout() {
   return await post("/api/logout");
 }
 
+export async function createProposal(data) {
+  return await post("/api/proposal", data);
+}
+
+export async function updateProposal(id, proposal) {
+  return await put(`/api/proposal/${id}`, proposal);
+}
+
 export async function getProposal(id) {
   return await get("/api/proposal/" + id);
 }
@@ -38,5 +46,17 @@ export async function addMessage(text) {
 
 export async function removeMessage(id) {
   return await delete2(`/api/message/${id}`);
+}
+
+export async function getInitialData() {
+  return await get('/api/initial');
+}
+
+export async function updateUser(user) {
+  return await put('/api/user', user);
+}
+
+export async function registerTeamMember(token) {
+  return await put('/api/team', { token });
 }
 

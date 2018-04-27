@@ -1,30 +1,30 @@
 import React, { Component } from 'react';
 import {Navbar as Navbar2, Collapse, NavbarToggler, Nav, NavItem, Button} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Link as ScrollLink } from 'react-scroll';
 import navItems from '../data/nav-items';
 import cn from 'classnames';
 import s from './Navbar.css';
-import createMemoryHistory from 'history/createMemoryHistory';
-import createBrowserHistory from 'history/createBrowserHistory';
 import logoImg from '../images/reversim_logo@2x.png';
 import Avatar from "./Avatar";
 import { isServer } from '../utils';
+import { REVERSIM_SUMMIT } from '../utils';
+import { getLoginUrl } from './Redirect';
+import { cfp } from '../features';
 
-const history = isServer ? createMemoryHistory() : createBrowserHistory();
+const CFPCTA = () => (
+  <Button color="primary" className="mr-4">
+    <Link to="/cfp" className="unstyled-link">Submit session</Link>
+  </Button>
+);
 
 const navLinkClass = cn("nav-link", s.navLink);
 
-const onNavItemClick = (name) => () => history.push(name);
-
-const NavbarItem = ({ to, text, noScroll, external }) => {
+const NavbarItem = ({ to, text, external }) => {
   let link;
   if (external) {
     link = <a className={navLinkClass} href={`/${to}`}>{text}</a>
-  } else if (noScroll) {
-    link = <Link className={navLinkClass} to={`/${to}`} onClick={onNavItemClick(to)}>{text}</Link>;
   } else {
-    link = <ScrollLink className={navLinkClass} activeClass='active' to={to} spy={true} smooth={true} offset={-50} duration={500} onClick={onNavItemClick(to)}>{text}</ScrollLink>
+    link = <Link className={navLinkClass} to={`/${to}`}>{text}</Link>;
   }
   return (
     <NavItem key={to} className={s.navItem}>
@@ -65,33 +65,44 @@ class Navbar extends Component {
   };
 
   render() {
-    const { isHome, isSmallScreen, user, onLogout } = this.props;
+    const { isHome, isSmallScreen, user, onLogout, pathname, history } = this.props;
     const { fixed } = this.state;
     const items = navItems(isHome);
 
-    const logo = <img className={s.logo} src={logoImg} onClick={onNavItemClick("/")} alt="Reversim Summit 2017"/>
+    const logo = <img className={s.logo} src={logoImg} onClick={() => history.push("/")} alt={REVERSIM_SUMMIT}/>
 
     const navbarBrand = isHome ?
-      <ScrollLink className='navbar-brand mr-5' activeClass='active' to="hero" spy={true} smooth={true} offset={-50} duration={500}>{logo}</ScrollLink> :
+      <a href='/'>{logo}</a> :
       <Link className="navbar-brand mr-5" to="/">{logo}</Link>
 
     return (
-      <Navbar2 toggleable fixed="top" className={cn({ [s.isNotHome]: !isHome, [s.isWhite]: !isHome || fixed })}>
-        <NavbarToggler right onClick={this.toggle}/>
+      <Navbar2 expand="sm" fixed="top" className={cn(s.navbar, { [s.isNotHome]: !isHome, [s.isWhite]: !isHome || fixed })}>
         {navbarBrand}
-        <Collapse isOpen={this.state.isOpen} navbar>
+        <div className="d-flex justify-content-between">
+          { cfp && isSmallScreen && pathname !== '/cfp' && <CFPCTA /> }
+          <NavbarToggler onClick={this.toggle}/>
+        </div>
+        <Collapse isOpen={this.state.isOpen} navbar className={cn({"bg-white border-bottom": isSmallScreen})}>
           <Nav navbar>
             { items.map(NavbarItem) }
+            { isSmallScreen && user && <div className="border-top">
+              <NavbarItem to={`/profile`} text="My profile" />
+            </div>}
+            { isSmallScreen && !user && <div className="border-top">
+              <NavbarItem to={getLoginUrl()} text="Login" external={true} />
+            </div>}
           </Nav>
         </Collapse>
+        { cfp && !isSmallScreen && pathname !== '/cfp' && <CFPCTA /> }
 
-				{ !isServer && !isSmallScreen && <div className="ml-auto">
-					{ user.authenticated ?
+        { !isServer && !isSmallScreen && <div className="ml-auto">
+          { user ?
             <Avatar {...user} onLogout={onLogout}/>
-						: <a href="/auth/google">
-              <Button outline color="secondary" onClick={this.login}>Login</Button>
+            : <a href={getLoginUrl()}>
+              <Button outline color="primary" onClick={this.login}>Login</Button>
             </a> }
         </div> }
+
       </Navbar2>
     );
   }

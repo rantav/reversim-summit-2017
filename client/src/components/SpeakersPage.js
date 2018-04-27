@@ -6,16 +6,16 @@ import Speaker from "./Speaker";
 
 const SpeakerItem = (speaker, i) => {
   return <Col xs="12" sm="6" className="mb-4" key={i}>
-    <Speaker {...speaker} color={colors[i%colors.length]} isFull={true}/>
+    <Speaker speaker={speaker} color={colors[i%colors.length]} isFull={true}/>
   </Col>
 };
 
 const SpeakesPage = ({ speakers, ...props}) => (
-  <Page title="" {...props}>
+  <Page title="Speakers" {...props}>
     <Container>
       <h1 className="text-center my-5">Meet our speakers</h1>
       <Row>
-        {speakers.toJS().map(SpeakerItem)}
+        {speakers.map(SpeakerItem)}
       </Row>
     </Container>
 

@@ -12,27 +12,9 @@ cloudinary.config({
 
 export function me(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.status(200).json({
-      authenticated: true,
-      name: req.user && req.user.profile.name,
-      oneLiner: req.user && req.user.profile.oneLiner,
-      email: req.user && req.user.email,
-      isReversimTeamMember: req.user && req.user.isReversimTeamMember,
-      picture: req.user && req.user.profile.picture,
-      bio: req.user && req.user.profile.bio,
-      trackRecord: req.user && req.user.profile.trackRecord,
-      linkedin: req.user && req.user.profile.linkedin,
-      twitter: req.user && req.user.profile.twitter,
-      stackOverflow: req.user && req.user.profile.stackOverflow,
-      github: req.user && req.user.profile.github,
-      phone: req.user && req.user.profile.phone,
-      id: req.user && req.user._id,
-      proposals: req.user && req.user.proposals
-    })
+    return res.status(200).json(transformUser(req.user, req.user));
   } else {
-    return res.status(200).json({
-      authenticated: false
-    })
+    return res.status(403).text('No logged in user');
   }
 }
 
@@ -93,16 +75,28 @@ export function signUp(req, res, next) {
   });
 }
 
+export function registerTeamMember(req, res) {
+  if (req.body.token === process.env.TEAM_MEMBER_TOKEN) {
+    User.findOneAndUpdate({ '_id': req.session.passport.user }, { isReversimTeamMember: true }, (err, user) => {
+      if (err) {
+        console.log(`Error in registerTeamMember query: ${err}`);
+        console.error('stack: '+err.stack);
+        return res.status(500).send('Something went wrong');
+      }
+
+      return res.status(200).send('Updated successfully');
+    });
+  } else {
+    return res.status(404).send();
+  }
+}
+
 /**
  * Update a user
  */
 export function update(req, res) {
   const omitKeys = ['id', '_id', '_v', 'google', 'teamMemberToken'];
   const data = _.omit(req.body, omitKeys);
-
-  if (req.body.teamMemberToken === process.env.TEAM_MEMBER_TOKEN) {
-    data.isReversimTeamMember = true;
-  }
 
   console.log('update body is: '+JSON.stringify(data));
 
@@ -120,10 +114,11 @@ export function update(req, res) {
 }
 
 export function uploadProfilePicture(req, res) {
+  console.log(`uploadProfilePicture for ${req.body.id} started...`);
   cloudinary.uploader.upload(req.body.imageBinary, function(result) {
-    console.log('uploadProfilePicture started...');
+    console.log(`uploadProfilePicture for ${req.body.id} complete...`, result);
 
-    User.findOneAndUpdate({ '_id': req.body.id }, {'profile.picture': result.secure_url}, (err, user) => {
+    User.findOneAndUpdate({ '_id': req.body.id }, {picture: result.secure_url}, (err, user) => {
       if (err) {
         console.log(`Error in users/uploadProfilePicture query: ${err}`);
         console.error('stack: '+err.stack);
@@ -139,30 +134,32 @@ export function uploadProfilePicture(req, res) {
 }
 
 const reversimTeam = [
-  'Lidan Hifi',
+  'Gili Alperovitch',
   'Amit Zur',
-  'Adam Matan',
-  'Shlomi Hassan',
+  'Shlomi Noach',
   'Ori Lahav',
   'Ran Tavory'
 ].map(x => x.toLowerCase());
 
-export function getReversimTeam(req, res) {
-  //console.log('proposal all started...');
-  User.find({ isReversimTeamMember: true }).exec((err, users) => {
-    if (err) {
-      console.log(`Error in users/getReversimTeam query: ${err}`);
-      console.error('stack: '+err.stack);
-      return res.status(500).send('Something went wrong');
-    }
+export async function getReversimTeam(req, res) {
+  try {
+    const team = await getTeam();
+    return res.json(team.map(u => transformUser(u, req.user)));
+  } catch(err) {
+    return res.status(500).send('Something went wrong');
+  }
+}
 
-    let ret = users
-      .sort((a,b) => {
-        return reversimTeam.indexOf(b.profile.name.toLowerCase()) - reversimTeam.indexOf(a.profile.name.toLowerCase());
-      })
-      .map(u => transformUser(u, req.user));
-    return res.json(ret);
-  });
+async function getTeam() {
+  try {
+    const users = await User.find({ isReversimTeamMember: true });
+    return users.sort((a,b) => {
+      return reversimTeam.indexOf(b.name.toLowerCase()) - reversimTeam.indexOf(a.name.toLowerCase());
+    });
+  } catch(err) {
+    console.log(`Error in users/getReversimTeam query: ${err}`);
+    throw err;
+  }
 }
 
 /**
@@ -193,5 +190,7 @@ export default {
   signUp,
   getProposals,
   getReversimTeam,
-  uploadProfilePicture
+  uploadProfilePicture,
+  getTeam,
+  registerTeamMember
 };

@@ -5,7 +5,6 @@
 import mongoose from 'mongoose';
 
 const ProposalSchema = new mongoose.Schema({
-  id: String,
   title: String,
   abstract: String,
   outline: String,
@@ -20,6 +19,7 @@ const ProposalSchema = new mongoose.Schema({
   }],
   comments: [String],
   tags: [String],
+  categories: [String],
   editing: Boolean,
   deleted: Boolean,
   status: {
@@ -27,7 +27,6 @@ const ProposalSchema = new mongoose.Schema({
     default: 'proposed'
   },
   slides_gdrive_id: String,
-  video_url: String,
   startTime: Date,
   endTime: Date,
   hall: String,

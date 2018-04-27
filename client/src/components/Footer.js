@@ -3,7 +3,7 @@ import {Col, Container, Row} from "reactstrap";
 import footerLogoImg from '../images/reversim_logo_footer.png';
 
 const Footer = () => (
-  <footer className="bg-inverse text-white p-5">
+  <footer className="bg-gray-900 text-white p-5">
     <Container>
       <Row className="align-items-start mb-5">
         <Col xs="12" sm="auto">
@@ -31,7 +31,7 @@ const Footer = () => (
           <a href="https://www.facebook.com/groups/806177629478248/" target="_blank" rel="noopener noreferrer"><i className="fa fa-facebook"/></a>
         </Col>
         <Col xs="12" sm="auto">
-          <small className="text-muted">All Rights Reserved © 2017</small>
+          <small className="text-muted">All Rights Reserved © 2018</small>
         </Col>
       </Row>
     </Container>
