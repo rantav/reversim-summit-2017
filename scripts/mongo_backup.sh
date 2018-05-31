@@ -1,10 +1,10 @@
-#! /usr/local/bin/bash
+#! /bin/bash
 
 source .private/ENV_VARS
 
 d=`date +%Y-%m-%d-%H-%M-%S`
 
-for c in proposals users
+for c in proposals users sponsors
 do
     file=".private/backup-$d/$c.json"
     echo "Exporting $c"
@@ -12,6 +12,6 @@ do
 
     if [ "$1" = "--import" ]; then
         echo "Importing $c"
-        mongoimport -d ReversimSummit -c $c --mode upsert --file $file
+        mongoimport -d ReversimSummit18 -c $c --mode upsert --file $file
     fi
 done

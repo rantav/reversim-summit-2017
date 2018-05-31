@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import cn from 'classnames';
 import s from './Hero.css';
 import Messages from './Messages';
-import {Container} from "reactstrap";
+import { Button, Container } from 'reactstrap';
+import { REVERSIM_SUMMIT } from '../utils';
+import { Link } from 'react-router-dom';
 
 
 class Hero extends Component {
@@ -10,16 +12,20 @@ class Hero extends Component {
   render() {
     const { messages } = this.props;
     return (
-      <section className={cn(s.hero, "d-flex", "align-items-center", "justify-content-lg-center", "flex-column", "font-pt")}>
-        <div>
-          <h1 className={cn("font-weight-bold", "mb-4", "text-center", s.title)}>Reversim Summit 2017</h1>
-          <div className={cn(s.autoCenter, "h4", "d-inline-block", "mb-4")}>
-            <div><i className="fa fa-calendar-o text-primary mr-3 mb-3"/><span>15 - 16 . Oct</span></div>
-            <div><i className="fa fa-map-marker text-primary mr-3 ml-1"/><span>College of Management</span></div>
+      <section className={s.hero}>
+        <div className={cn(s.heroInner, 'ml-auto font-amstelvar text-center')}>
+          <h1 className={cn("font-weight-bold mb-4 text-center", s.title)}>{REVERSIM_SUMMIT}</h1>
+          <div className={cn( "h4 d-inline-block mb-8 text-left")}>
+            <div><i className="fa fa-calendar-o mr-3 mb-3"/><span>8 - 9 . Oct</span></div>
+            <div><i className="fa fa-map-marker mr-3 ml-1"/><span>Tel Aviv University</span></div>
           </div>
-          <div className="mb-3">
-            <div className={cn(s.cta, "p-5", s.autoCenter, "d-inline-block", "text-center")}>
-              <h3 className="text-uppercase mb-0">It was awesome seeing you, thanks everyone!</h3>
+          <div className="mb-8">
+            <div className={cn(s.cta, "p-5 d-inline-block mx-6 font-raleway")}>
+              <h3 className="text-uppercase">We're back,</h3>
+              <h4 className="mb-0 font-weight-normal">CFP is open!</h4>
+              <Link to="/cfp" className="unstyled-link mt-4 d-block">
+                <Button color="primary" size="lg">Submit session</Button>
+              </Link>
             </div>
           </div>
           <div className="text-center">

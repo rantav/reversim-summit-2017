@@ -1,4 +1,4 @@
-import { get, post, delete2 } from './api';
+import { get, post, put, delete2 } from './api';
 
 export async function getProposals() {
   return await get("/api/proposal");
@@ -18,6 +18,14 @@ export async function getMe() {
 
 export async function logout() {
   return await post("/api/logout");
+}
+
+export async function createProposal(data) {
+  return await post("/api/proposal", data);
+}
+
+export async function updateProposal(id, proposal) {
+  return await put(`/api/proposal/${id}`, proposal);
 }
 
 export async function getProposal(id) {
@@ -40,3 +48,30 @@ export async function removeMessage(id) {
   return await delete2(`/api/message/${id}`);
 }
 
+export async function getInitialData() {
+  return await get('/api/initial');
+}
+
+export async function updateUser(user) {
+  return await put('/api/user', user);
+}
+
+export async function registerTeamMember(token) {
+  return await put('/api/team', { token });
+}
+
+export async function attend(proposalId, isAttending) {
+  return await post(`/api/proposal/${proposalId}/attend`, { value: !!isAttending });
+}
+
+export async function addSponsor(data) {
+  return await post('/api/sponsor', data);
+}
+
+export async function updateSponsor(id, data) {
+  return await put(`/api/sponsor/${id}`, data);
+}
+
+export async function deleteSponsor(id) {
+  return await delete2(`/api/sponsor/${id}`);
+}

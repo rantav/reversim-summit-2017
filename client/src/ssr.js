@@ -1,10 +1,9 @@
 import { createElement } from 'react';
+import { getInitialData } from './data-service';
 const { renderToString } = require('react-dom/server');
-import store, { initStore } from './store';
 import routes from './data/routeComps';
 import fs from 'fs';
 import { resolve } from 'path';
-import { toJS } from 'mobx';
 import App from './components/App';
 import './sass/bootstrap.scss';
 
@@ -24,7 +23,7 @@ const renderFile = (path, filename, folder = '') => {
 	fs.writeFileSync(resolve(__dirname, '../build', folder, filename), html);
 };
 
-initStore().then(() => {
+getInitialData().then((store) => {
 	routes.forEach(({ path, comp }) => {
 		if (path === "/speaker/:id") {
 			const { speakers } = store;
@@ -35,7 +34,7 @@ initStore().then(() => {
 		} else if (path === "/session/:id") {
 			const { proposals } = store;
       proposals.forEach((session) => {
-				const sessionId = session.id;
+				const sessionId = session._id;
 				if (sessionId) {
           renderFile(`/session/${sessionId}`, `${sessionId}.html`, 'session');
 				} else {
