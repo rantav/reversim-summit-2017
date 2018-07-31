@@ -10,7 +10,7 @@ import helmet from 'helmet';
 import { session as dbSession } from '../db';
 
 export default (app) => {
-  app.set('port', (process.env.SERVER_PORT || 5001));
+  app.set('port', (process.env.PORT || 5001));
 
   if (process.env.NODE_ENV === 'production') {
     app.use(gzip());
@@ -27,7 +27,7 @@ export default (app) => {
 
 
   // As a temporary means, we're not forcing SSL on heroku in order to allow migration to GH pages and let HSTS cool down.
-  // app.use(require('force-ssl-heroku'));
+  app.use(require('force-ssl-heroku'));
 
   app.use(bodyParser.json({limit: '50mb'}));
   app.use(bodyParser.urlencoded({limit: '50mb', extended: true})); // for parsing application/x-www-form-urlencoded

@@ -1,40 +1,27 @@
-import { isServer } from '../utils';
+import {isServer} from '../utils';
 
-const about =    { to: "about", text: "About" };
-const register = { to: "register", text: "Register", noScroll: true };
-const team =     { to: "team", text: "Team" };
-const location = { to: "location", text: "Getting there", noScroll: true };
-const speakers = { to: "speakers", text: "Speakers", noScroll: true };
-const sponsors = { to: "sponsors", text: "Sponsors", noScroll: true };
-const schedule = { to: "schedule", text: "Schedule", noScroll: true };
+const _register = {to: 'register', text: 'Register'};
+const _team = {to: 'team', text: 'Team'};
+const location = {to: 'location', text: 'Venue'};
+const speakers = {to: 'speakers', text: 'Speakers'};
+const sponsors = {to: 'sponsors', text: 'Sponsors'};
+const schedule = {to: 'schedule', text: 'Schedule'};
+const _proposals = {to: 'proposals', text: 'Proposals'};
+const sessions = {to: 'sessions', text: 'Sessions'};
+const _timeline = {to: 'timeline', text: 'Timeline'};
 
-export default (isHome) => {
-	if (isServer) {
-		return [
-			speakers,
-			schedule,
-			location,
-			sponsors
-		].map(item => ({
-			...item,
-			external: true,
-			to: `${item.to}.html`
-		}));
-	}
+export default () => {
+  let items;
 
-  let items = [
-		about,
-		register,
-		speakers,
-		schedule,
-		location,
-		team,
-		sponsors
-	];
-
-  if (!isHome) {
-    items = items.map(item => ({ noScroll: true, ...item }));
+  if (isServer) {
+    items = [speakers, schedule, location, sponsors].map(item => ({
+      ...item,
+      external: true,
+      to: `/${item.to}.html`,
+    }));
+  } else {
+    items = [schedule, /*location,*/ speakers, sessions, sponsors];
   }
 
   return items;
-}
+};

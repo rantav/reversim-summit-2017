@@ -1,12 +1,33 @@
 import React from 'react';
-import Page from "./Page";
-import heroImg from '../images/session.png';
-import { Container, Row, Col } from 'reactstrap';
-import {getSessionTypeStr} from "../utils";
+import Page from './Page';
+import {Container, Row, Col, Button} from 'reactstrap';
+import {getHref, getSessionTypeStr} from '../utils';
 import Tag from './Tag';
-import SpeakerShort from "./SpeakerShort";
 import ReactMarkdown from 'react-markdown';
-import { agenda1, agenda2 } from '../data/agenda';
+import {agenda1, agenda2} from '../data/agenda';
+import {Link} from 'react-router-dom';
+import SessionPageRoute from './SessionPageRoute';
+import VoteButton from './VoteButton';
+
+import cn from 'classnames';
+import SpeakerSocialLinks from './SpeakerSocialLinks';
+import {img, body} from './Speaker2.css';
+
+const Speaker = ({speaker}) => {
+  const {name, oneLiner, picture, twitter, github, linkedin, stackOverflow} = speaker;
+  return (
+    <Link to={`/speaker/${getHref(speaker)}`} className="text-white unstyled-link">
+      <div className="d-flex align-items-start">
+        <div style={{backgroundImage: `url('${picture}')`}} alt={name} className={img} />
+        <div className={cn('pt-8 pb-4 pl-8 pr-4 mt-4 bg-emph')} style={{marginLeft: -20}}>
+          <div className="font-size-md font-weight-bold mb-4">{name}</div>
+          <div className="font-size-sm mb-7">{oneLiner}</div>
+          <SpeakerSocialLinks {...{twitter, github, linkedin, stackOverflow}} />
+        </div>
+      </div>
+    </Link>
+  );
+};
 
 const agenda = [agenda1, agenda2];
 
@@ -29,7 +50,7 @@ const _getDateAndTime = (index, id) => {
           });
         }
       });
-    } else if (typeof slot.sessions === "string") {
+    } else if (typeof slot.sessions === 'string') {
       if (slot.sessions === id) {
         day = index;
         time = slot.time;
@@ -40,12 +61,12 @@ const _getDateAndTime = (index, id) => {
           day = index;
           time = slot.time;
         }
-      })
+      });
     }
   });
 
   if (time) {
-    return { day, time };
+    return {day, time};
   }
 };
 
@@ -53,71 +74,94 @@ const getDateAndTime = id => {
   return _getDateAndTime(0, id) || _getDateAndTime(1, id);
 };
 
-const dates = [
-  "October 15, 2017",
-  "October 16, 2017"
-];
+const dates = ['October 8, 2018', 'October 9, 2018'];
 
+const SessionPage = props => {
+  const {
+    user,
+    session,
+    sessionSspeakers,
+    attendProposal,
+    eventConfig,
+    match: {
+      params: {id},
+    },
+  } = props;
+  const {voting} = eventConfig;
+  const {title, abstract, type, tags, outline, categories, attended} = session;
+  const isAuthor = user && session.speaker_ids.includes(user._id);
+  const isTeamMember = user && user.isReversimTeamMember;
+  const canEdit = isAuthor || isTeamMember;
 
-class SessionPage extends React.Component {
-	componentWillMount() {
-		this.getProposalIfNeeded();
-	}
+  const dayTime = getDateAndTime(id);
 
-	componentWillReceiveProps(nextProps) {
-		this.getProposalIfNeeded();
-	}
+  return (
+    <Page title={session.title} {...props}>
+      <Container className="mt-4">
+        <div className="bg-emph p-5 mb-8">
+          <h3 className="font-weight-heavy">
+            {title}
+            {canEdit && (
+              <Link className="unstyled-link" to={`/session/${getHref(session)}/edit`}>
+                <Button color="primary" size="sm" className="ml-3">
+                  <i className="fa fa-pencil" />
+                </Button>
+              </Link>
+            )}
+          </h3>
+          <div className="d-flex mb-2">
+            <div className="mr-8">{getSessionTypeStr(type)}</div>
+            <div className="d-flex">{tags.map(Tag)}</div>
+          </div>
+          {dayTime && (
+            <Row className="align-items-center my-4">
+              <Col>
+                <i className="fa fa-calendar-o mr-3" />
+                <span className="mr-4">{dates[dayTime.day]}</span>
+                <i className="fa fa-clock-o mr-3" />
+                <span>{`${dayTime.time.substr(0, 2)}:${dayTime.time.substr(2)}`}</span>
+              </Col>
+            </Row>
+          )}
+          {voting ? (
+            <VoteButton
+              user={user}
+              attended={attended}
+              proposalId={id}
+              attendProposal={attendProposal}
+            />
+          ) : (
+            undefined
+          )}
+          <div className="font-size-sm">
+            <ReactMarkdown source={abstract} />
+          </div>
+          {categories && (
+            <div>
+              <h4>Categories</h4>
+              <ul>
+                {categories.map(cat => (
+                  <li key={cat} className="mr-2">
+                    {cat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {outline && (
+            <div>
+              <h4>Outline</h4>
+              <ReactMarkdown source={outline.replace(/\n/g, '<br/>\n')} />{' '}
+              {/* consolidate line breaks */}
+            </div>
+          )}
+        </div>
+        <div className="mb-10">
+          {sessionSspeakers.map(speaker => <Speaker key={speaker._id} speaker={speaker} />)}
+        </div>
+      </Container>
+    </Page>
+  );
+};
 
-	getProposalIfNeeded() {
-		const session = this.findSession();
-		if (this.props.sessions.length && !session) {
-			this.props.getProposal(this.props.match.params.id);
-		}
-	}
-
-	findSession() {
-		const { proposals, match: {params: {id}}} = this.props;
-		return proposals.find(s => s.id === id);
-	}
-
-	render() {
-		const session = this.findSession();
-
-		if (!session) return <div>aaaaa</div>;
-
-		const {title, abstract, type, tags, outline} = session;
-		const speakers = session.speaker_ids;
-
-		const dayTime = getDateAndTime(this.props.match.params.id);
-
-		return (
-			<Page title={`${session.title} · Reversim Summit 2017`} {...this.props}>
-				<div className="hero-page-img" style={{backgroundImage: `url('${heroImg}')`}}/>
-				<Container className="mt-4">
-					<Row>
-						<Col sm={{size: 8, offset: 2}}>
-							<p>{getSessionTypeStr(type)}</p>
-							<div className="d-flex text-muted mb-3">{tags.map(Tag)}</div>
-							<Row className="align-items-center my-4">
-								{ dayTime && <Col>
-									<i className="fa fa-calendar-o mr-3"/><span className="mr-4">{dates[dayTime.day]}</span>
-									<i className="fa fa-clock-o mr-3"/><span>{`${dayTime.time.substr(0, 2)}:${dayTime.time.substr(2)}`}</span>
-								</Col>}
-							</Row>
-							{speakers.map(SpeakerShort)}
-							<h4>{title}</h4>
-							{!dayTime && <div className="mb-3"><small title="Not participating in Reversim Summit 2017" className="py-1 px-2 bg-danger text-white">Proposal</small></div> }
-							<ReactMarkdown source={abstract}/>
-							{outline && <div>
-								<h4>Outline</h4>
-								<ReactMarkdown source={outline}/>
-							</div>}
-						</Col>
-					</Row>
-				</Container>
-			</Page>
-		);
-	}
-}
-
-export default SessionPage;
+export default SessionPageRoute(SessionPage);

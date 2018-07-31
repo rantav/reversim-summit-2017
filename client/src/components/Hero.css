@@ -1,23 +1,59 @@
 .hero {
-    background: url('../images/hero-min.png') center;
+    background: url('../images/intro-bg.jpg') center;
     background-size: cover;
-    width: 100%;
     min-height: 100vh;
-    color: #fff;
+}
+
+.heroInner {
+    margin-right: -120px;
+}
+
+.subtitle {
+    letter-spacing: 0.6px;
+    text-shadow: 0 0 49px #030135;
+}
+
+.headphones {
+    background: url('../images/headphones-art.png') center;
+    background-size: 100%;
+    width: 797px;
+    height: 818px;
+}
+
+.left {
+    width: 477px;
+    margin-right: -230px;
+    z-index: 1;
+}
+
+.separator {
+    width: 151px;
 }
 
 @media (max-width:991px) {
-    .hero {
-        padding-top: 100px;
+    .heroInner {
+        margin-right: -80px;
+    }
+
+    .headphones {
+        width: calc(797px*0.7);
+        height: calc(818px*0.7);
+    }
+    
+    .left {
+        width: 320px;
+        margin-right: -80px;
+    }
+
+    .title {
+        font-size: 60px;
     }
 }
 
-.title {
-    font-size: 72px;
-}
-
 .cta {
-    border: 2px solid #fff;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    letter-spacing: 0.4px;
 }
 
 .autoCenter {
@@ -26,13 +62,25 @@
     transform: translateX(-50%);
 }
 
-@media (max-width:576px) {
-    .title {
-        font-size: 60px;
+@media (max-width:768px) {
+    .heroInner {
+        flex-direction:column;
+        margin-right: 0;
+        margin-top: 120px;
     }
-}
 
-@media (max-width:460px) {
+    .left  {
+        width: auto;
+        max-width: 390px;
+        margin-right: 0;
+    }
+
+    .headphones {
+        width: 100%;
+        height: auto;
+        padding-top:97.5%;
+    }
+
     .title {
         font-size: 48px;
     }

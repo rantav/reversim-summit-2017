@@ -1,101 +1,136 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {Navbar as Navbar2, Collapse, NavbarToggler, Nav, NavItem, Button} from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { Link as ScrollLink } from 'react-scroll';
+import {Link} from 'react-router-dom';
 import navItems from '../data/nav-items';
 import cn from 'classnames';
-import s from './Navbar.css';
-import createMemoryHistory from 'history/createMemoryHistory';
-import createBrowserHistory from 'history/createBrowserHistory';
-import logoImg from '../images/reversim_logo@2x.png';
-import Avatar from "./Avatar";
-import { isServer } from '../utils';
+import {navbar, logo, navLink, navItem, isWhite, isNotHome} from './Navbar.css';
+import logoImg from '../images/rs18-logo.svg';
+import Avatar from './Avatar';
+import {isServer} from '../utils';
+import {REVERSIM_SUMMIT} from '../utils';
 
-const history = isServer ? createMemoryHistory() : createBrowserHistory();
+const CFPCTA = () => (
+  <Link to="/cfp" className="unstyled-link">
+    <Button color="primary" className="mr-4">
+      Submit session
+    </Button>
+  </Link>
+);
 
-const navLinkClass = cn("nav-link", s.navLink);
+const navLinkClass = cn('nav-link', navLink);
 
-const onNavItemClick = (name) => () => history.push(name);
-
-const NavbarItem = ({ to, text, noScroll, external }) => {
+const NavbarItem = ({to, text, external}) => {
   let link;
   if (external) {
-    link = <a className={navLinkClass} href={`/${to}`}>{text}</a>
-  } else if (noScroll) {
-    link = <Link className={navLinkClass} to={`/${to}`} onClick={onNavItemClick(to)}>{text}</Link>;
+    link = (
+      <a className={navLinkClass} href={to}>
+        {text}
+      </a>
+    );
   } else {
-    link = <ScrollLink className={navLinkClass} activeClass='active' to={to} spy={true} smooth={true} offset={-50} duration={500} onClick={onNavItemClick(to)}>{text}</ScrollLink>
+    link = (
+      <Link className={navLinkClass} to={`/${to}`}>
+        {text}
+      </Link>
+    );
   }
   return (
-    <NavItem key={to} className={s.navItem}>
+    <NavItem key={to} className="text-white ml-lg-5 font-weight-heavy font-size-md">
       {link}
     </NavItem>
-  )
+  );
 };
 
 class Navbar extends Component {
   state = {
     isOpen: false,
-    fixed: false
+    fixed: false,
   };
 
   toggle = () => {
     this.setState({
-      isOpen: !this.state.isOpen
+      isOpen: !this.state.isOpen,
     });
   };
 
   componentWillMount() {
     if (window.scrollY > 60) {
-      this.setState({ fixed: true });
+      this.setState({fixed: true});
     }
   }
 
   componentDidMount() {
-    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener('scroll', this.onScroll);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener('scroll', this.onScroll);
   }
 
-  onScroll = (e) => {
+  onScroll = _e => {
     const fixed = window.scrollY > 60;
-    this.setState({ fixed });
+    this.setState({fixed});
   };
 
   render() {
-    const { isHome, isSmallScreen, user, onLogout } = this.props;
-    const { fixed } = this.state;
+    const {isHome, isSmallScreen, user, onLogout, pathname, history, eventConfig} = this.props;
+    const {cfp} = eventConfig;
+    const {fixed} = this.state;
     const items = navItems(isHome);
+    const isColored = !isHome || fixed;
 
-    const logo = <img className={s.logo} src={logoImg} onClick={onNavItemClick("/")} alt="Reversim Summit 2017"/>
+    const logoEl = (
+      <img className={logo} src={logoImg} onClick={() => history.push('/')} alt={REVERSIM_SUMMIT} />
+    );
 
-    const navbarBrand = isHome ?
-      <ScrollLink className='navbar-brand mr-5' activeClass='active' to="hero" spy={true} smooth={true} offset={-50} duration={500}>{logo}</ScrollLink> :
-      <Link className="navbar-brand mr-5" to="/">{logo}</Link>
+    const navbarBrand = isHome ? (
+      <a href="/">{logoEl}</a>
+    ) : (
+      <Link className="navbar-brand mr-5" to="/">
+        {logoEl}
+      </Link>
+    );
 
     return (
-      <Navbar2 toggleable fixed="top" className={cn({ [s.isNotHome]: !isHome, [s.isWhite]: !isHome || fixed })}>
-        <NavbarToggler right onClick={this.toggle}/>
-        {navbarBrand}
+      <Navbar2
+        expand="lg"
+        fixed="top"
+        className={cn(navbar, {[isNotHome]: !isHome, [isWhite]: isColored})}>
+        <div className="d-flex justify-content-between w-100">
+          {navbarBrand}
+          {cfp && isSmallScreen && pathname !== '/cfp' && <CFPCTA />}
+          <NavbarToggler onClick={this.toggle} className="ml-auto" />
+        </div>
         <Collapse isOpen={this.state.isOpen} navbar>
-          <Nav navbar>
-            { items.map(NavbarItem) }
+          <Nav
+            navbar
+            className={cn('ml-auto align-items-end p-3 p-lg-0', {'bg-darkblue': isSmallScreen})}>
+            <a href="https://news.ycombinator.com" className="d-none d-lg-block">
+              <Button size="lg" className="text-capitalize font-size-lg-md">
+                Get Tickets
+              </Button>
+            </a>
+            {items.map(NavbarItem)}
+            {isSmallScreen &&
+              user && (
+                <div className="border-top">
+                  <NavbarItem to="profile" text="My profile" />
+                  <NavbarItem to="my-votes" text="My votes" />
+                  <NavItem className={navItem} onClick={onLogout}>
+                    <span className={navLinkClass}>Logout</span>
+                  </NavItem>
+                </div>
+              )}
           </Nav>
         </Collapse>
+        {cfp && !isSmallScreen && pathname !== '/cfp' && <CFPCTA />}
 
-				{ !isServer && !isSmallScreen && <div className="ml-auto">
-					{ user.authenticated ?
-            <Avatar {...user} onLogout={onLogout}/>
-						: <a href="/auth/google">
-              <Button outline color="secondary" onClick={this.login}>Login</Button>
-            </a> }
-        </div> }
+        {!isServer &&
+          !isSmallScreen &&
+          user && <div className="ml-5">{<Avatar {...user} onLogout={onLogout} />}</div>}
       </Navbar2>
     );
   }
-
 }
 
 export default Navbar;
